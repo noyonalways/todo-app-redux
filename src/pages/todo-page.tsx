@@ -6,7 +6,7 @@ const Todo = () => {
   return (
     <Container>
       <div className="relative">
-        <div className="absolute right-0 top-4">
+        <div className="absolute right-3 md:right-0 top-6">
           <ModeToggle />
         </div>
         <h1 className="text-3xl text-center font-bold py-5 mb-8">

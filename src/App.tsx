@@ -1,6 +1,6 @@
 import "./App.css";
 import ThemeProvider from "./components/theme-provider";
-import Todo from "./pages/todo";
+import Todo from "./pages/todo-page";
 
 function App() {
   return (
