@@ -11,22 +11,43 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAddTodoMutation } from "@/redux/api/api";
 import { FormEvent, useState } from "react";
 
 export default function AddTodoModal() {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
+
+  // for local state management
   // const dispatch = useAppDispatch();
+
+  // for server state management
+  const [addTodo, { data, isLoading }] = useAddTodoMutation();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const newTodo = {
+      title: task,
+      isCompleted: false,
+      description,
+      priority,
+    };
 
-    // const newTodo = {
-    //   title: task,
-    //   description: description,
-    // };
-
+    // for local state management
     // dispatch(addTodo(newTodo));
+
+    // for server state management
+    addTodo(newTodo);
   };
 
   return (
@@ -65,7 +86,24 @@ export default function AddTodoModal() {
                 className="col-span-3"
               />
             </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Priority</Label>
+              <Select onValueChange={(value) => setPriority(value)}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Priority</SelectLabel>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+
           <DialogFooter>
             <DialogClose asChild>
               <Button type="submit">Add Task</Button>

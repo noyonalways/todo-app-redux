@@ -5,6 +5,7 @@ export type TTodo = {
   title: string;
   description: string;
   isCompleted: boolean;
+  priority: "low" | "medium" | "high";
 };
 
 type TInitialState = {

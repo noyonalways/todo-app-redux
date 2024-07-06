@@ -11,7 +11,7 @@ const TodoContainer = () => {
   const { data: todos, isLoading, isError } = useGetTodosQuery(undefined);
 
   if (isError) {
-    return <p className="text-center font-bold text-lg py-3">Error</p>;
+    return <p className="text-center font-bold text-lg py-3">Error Occurred</p>;
   }
 
   return (
