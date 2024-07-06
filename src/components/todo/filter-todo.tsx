@@ -8,11 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
 
-export function FilterTodo() {
-  const [priority, setPriority] = useState("low");
+type TFilterProps = {
+  priority: string;
+  setPriority: (priority: string) => void;
+};
 
+export function FilterTodo({ priority, setPriority }: TFilterProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

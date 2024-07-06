@@ -20,50 +20,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAddTodoMutation } from "@/redux/api/api";
-import { FormEvent, useState } from "react";
+import { useUpdateTodoMutation } from "@/redux/api/api";
+import { Edit } from "lucide-react";
+import { useState } from "react";
 
-export default function AddTodoModal() {
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
+type TUpdateTodoModalProps = {
+  id: string;
+  isCompleted: boolean;
+  title: string;
+  description: string;
+  priority: "high" | "medium" | "low";
+};
 
-  // for local state management
-  // const dispatch = useAppDispatch();
+export default function UpdateTodoModal({
+  id,
+  title,
+  description,
+  priority,
+  isCompleted,
+}: TUpdateTodoModalProps) {
+  const [updateTask, setUpdateTask] = useState("");
+  const [updateDescription, setUpdateDescription] = useState("");
+  const [updatePriority, setUpdatePriority] = useState("");
 
-  // for server state management
-  const [addTodo] = useAddTodoMutation();
+  const [updateTodo] = useUpdateTodoMutation();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const newTodo = {
-      title: task,
-      isCompleted: false,
-      description,
-      priority,
+  const handleUpdate = () => {
+    const updatedTodo = {
+      title: updateTask || title,
+      description: updateDescription || description,
+      priority: (updatePriority as "high" | "medium" | "low") || priority,
+      isCompleted,
     };
 
-    // for local state management
-    // dispatch(addTodo(newTodo));
-
-    // for server state management
-    addTodo(newTodo);
+    updateTodo({ id, data: updatedTodo });
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-primary-gradient dark:text-white">
-          Add Todo
+        <Button className="bg-[#5c53fe]">
+          <Edit size={16} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleUpdate}>
           <DialogHeader>
-            <DialogTitle>Add Todo</DialogTitle>
-            <DialogDescription>
-              Add your task that you want to finish
-            </DialogDescription>
+            <DialogTitle>Update Todo</DialogTitle>
+            <DialogDescription>Update your task</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -71,7 +75,7 @@ export default function AddTodoModal() {
                 Title
               </Label>
               <Input
-                onBlur={(e) => setTask(e.target.value)}
+                onBlur={(e) => setUpdateTask(e.target.value)}
                 id="task"
                 className="col-span-3"
               />
@@ -81,14 +85,14 @@ export default function AddTodoModal() {
                 Description
               </Label>
               <Input
-                onBlur={(e) => setDescription(e.target.value)}
+                onBlur={(e) => setUpdateDescription(e.target.value)}
                 id="description"
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Priority</Label>
-              <Select onValueChange={(value) => setPriority(value)}>
+              <Select onValueChange={(value) => setUpdatePriority(value)}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
@@ -106,7 +110,7 @@ export default function AddTodoModal() {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Add Task</Button>
+              <Button type="submit">Update Todo</Button>
             </DialogClose>
           </DialogFooter>
         </form>

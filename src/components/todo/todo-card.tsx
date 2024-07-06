@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { removeTodo, toggleComplete } from "@/redux/features/todoSlice";
-import { useAppDispatch } from "@/redux/hooks";
-import { Edit, Trash2 } from "lucide-react";
+import { useDeleteTodoMutation, useUpdateTodoMutation } from "@/redux/api/api";
+import { Trash2 } from "lucide-react";
+import UpdateTodoModal from "./update-todo-modal";
 
 type TTodoProps = {
   _id: string;
@@ -19,17 +19,37 @@ const TodoCard = ({
   isCompleted,
   priority,
 }: TTodoProps) => {
-  const dispatch = useAppDispatch();
+  // for local state
+  // const dispatch = useAppDispatch();
+
+  // for server state
+  const [updateTodo] = useUpdateTodoMutation();
+  const [deleteTodo] = useDeleteTodoMutation();
 
   const toggleState = () => {
-    dispatch(toggleComplete(_id));
+    const updatedTodo = {
+      title,
+      description,
+      priority,
+      isCompleted: !isCompleted,
+    };
+
+    updateTodo({ id: _id, data: updatedTodo });
+  };
+
+  const handleDelete = () => {
+    deleteTodo(_id);
   };
 
   return (
     <div className="flex items-center justify-between p-3 dark:bg-slate-800 bg-slate-200 rounded-lg">
-      <Checkbox className="mr-3" onCheckedChange={toggleState} />
-      <h3 className="font-semibold flex-1">{title}</h3>
-      <div className="flex items-center gap-x-2 flex-1">
+      <Checkbox
+        className="mr-3"
+        onCheckedChange={toggleState}
+        checked={isCompleted}
+      />
+      <h3 className="font-semibold md:flex-1">{title}</h3>
+      <div className="flex items-center gap-x-2 md:flex-1">
         <div
           className={`size-3 rounded-full 
           ${priority === "high" && "bg-red-500"}
@@ -40,21 +60,26 @@ const TodoCard = ({
         <p>{priority}</p>
       </div>
       {isCompleted ? (
-        <p className="text-green-500 flex-1">Done</p>
+        <p className="text-green-500 md:flex-1">Done</p>
       ) : (
-        <p className="text-red-500 flex-1">Pending</p>
+        <p className="text-red-500 md:flex-1">Pending</p>
       )}
       <p className="flex-[2]">{description}</p>
       <div className="flex space-x-3">
         <Button
-          onClick={() => dispatch(removeTodo(_id))}
+          onClick={handleDelete}
           variant={"destructive"}
+          className="hover:bg-red-800"
         >
           <Trash2 size={16} />
         </Button>
-        <Button className="bg-[#5c53fe] dark:text-white">
-          <Edit size={16} />
-        </Button>
+        <UpdateTodoModal
+          id={_id}
+          isCompleted={isCompleted}
+          title={title}
+          description={description}
+          priority={priority}
+        />
       </div>
     </div>
   );
