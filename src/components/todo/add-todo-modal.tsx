@@ -16,11 +16,17 @@ import { FormEvent, useState } from "react";
 export default function AddTodoModal() {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  // const dispatch = useAppDispatch();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    console.log({ task, description });
+    // const newTodo = {
+    //   title: task,
+    //   description: description,
+    // };
+
+    // dispatch(addTodo(newTodo));
   };
 
   return (
