@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TTodo } from "../features/todoSlice";
 
+type UpdateTodoMutationArgs = { id: string; data: Partial<TTodo> };
+type UpdateTodoResponse = Record<string, never>;
+
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
@@ -30,14 +33,11 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["todo"],
     }),
-    updateTodo: builder.mutation<
-      Record<string, never>,
-      { id: string; data: Partial<TTodo> }
-    >({
-      query: (options) => ({
-        url: `/tasks/${options.id}`,
+    updateTodo: builder.mutation<UpdateTodoResponse, UpdateTodoMutationArgs>({
+      query: ({ id, data }) => ({
+        url: `/tasks/${id}`,
         method: "PUT",
-        body: options.data,
+        body: { ...data },
       }),
       invalidatesTags: ["todo"],
     }),

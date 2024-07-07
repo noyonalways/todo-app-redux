@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { useUpdateTodoMutation } from "@/redux/api/api";
 import { Edit } from "lucide-react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 type TUpdateTodoModalProps = {
   id: string;
@@ -45,7 +45,9 @@ export default function UpdateTodoModal({
 
   const [updateTodo] = useUpdateTodoMutation();
 
-  const handleUpdate = () => {
+  const handleUpdate = (e: FormEvent) => {
+    e.preventDefault();
+
     const updatedTodo = {
       title: updateTask || title,
       description: updateDescription || description,
@@ -107,7 +109,6 @@ export default function UpdateTodoModal({
               </Select>
             </div>
           </div>
-
           <DialogFooter>
             <DialogClose asChild>
               <Button type="submit">Update Todo</Button>
